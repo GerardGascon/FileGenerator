@@ -8,6 +8,8 @@ class Program {
 		GenerateWithRandomSize(50);
 	}
 
+	const int BufferSize = 1024;
+
 	static void GenerateWithInputSize() {
 		Console.Write("Enter file size in KB: ");
 		string input = Console.ReadLine() ?? string.Empty;
@@ -17,7 +19,7 @@ class Program {
 			return;
 		}
 
-		long fileSize = long.Parse(input) * 1000;
+		long fileSize = long.Parse(input) * BufferSize;
 
 		Console.Write("Enter file name: ");
 		input = Console.ReadLine() ?? string.Empty;
@@ -37,7 +39,7 @@ class Program {
 		Random rnd = new();
 		for (int i = 0; i < numberOfFiles; i++) {
 			int kb = rnd.Next(0, 2_000_000);
-			long fileSize = kb * 1024;
+			long fileSize = kb * BufferSize;
 			
 			string fileName = $"{kb}KB";
 			CreateBinaryFile(fileName, fileSize);
@@ -48,8 +50,7 @@ class Program {
 	}
 
 	static void CreateBinaryFile(string filePath, long fileSize) {
-		const int bufferSize = 1024;
-		byte[] buffer = new byte[bufferSize];
+		byte[] buffer = new byte[BufferSize];
 
 		using FileStream fileStream = new($"{AppDomain.CurrentDomain.BaseDirectory}{filePath}", FileMode.Create);
 		long bytesWritten = 0;
@@ -57,7 +58,7 @@ class Program {
 		ProgressBar p = new();
 
 		while (bytesWritten < fileSize) {
-			int bytesToWrite = (int)Math.Min(bufferSize, fileSize - bytesWritten);
+			int bytesToWrite = (int)Math.Min(BufferSize, fileSize - bytesWritten);
 			new Random().NextBytes(buffer); // Generate random data
 
 			fileStream.Write(buffer, 0, bytesToWrite);
